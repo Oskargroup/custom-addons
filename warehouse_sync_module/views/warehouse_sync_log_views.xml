@@ -1,0 +1,100 @@
+<odoo>
+    <!-- Window action for viewing logs -->
+    <record id="action_warehouse_sync_log" model="ir.actions.act_window">
+        <field name="name">Warehouse Sync Logs</field>
+        <field name="res_model">warehouse.sync.log</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Main Warehouse menu -->
+    <menuitem id="menu_warehouse_sync_root" name="Warehouse" sequence="10"/>
+
+    <!-- Manual Sync menu item -->
+    <record id="action_manual_warehouse_sync" model="ir.actions.server">
+        <field name="name">Manual Sync</field>
+        <field name="model_id" ref="warehouse_sync_module.model_warehouse_sync_log"/>
+        <field name="binding_model_id" ref="warehouse_sync_module.model_warehouse_sync_log"/>
+        <field name="state">code</field>
+        <field name="code">
+            env['warehouse.sync'].search([], limit=1).run_sync()
+        </field>
+    </record>
+    <menuitem id="menu_manual_sync"
+        name="Manual Sync"
+        parent="menu_warehouse_sync_root"
+        action="action_manual_warehouse_sync"
+        sequence="15"
+    />
+
+    <!-- Sync Logs menu item -->
+    <menuitem id="menu_warehouse_sync_log"
+        name="Sync Logs"
+        parent="menu_warehouse_sync_root"
+        action="action_warehouse_sync_log"
+        sequence="20"
+    />
+
+    <!-- List view for logs -->
+    <record id="view_warehouse_sync_log_tree" model="ir.ui.view">
+        <field name="name">warehouse.sync.log.tree</field>
+        <field name="model">warehouse.sync.log</field>
+        <field name="type">list</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="alert">
+                <field name="create_date"/>
+                <field name="user_id"/>
+                <field name="status"/>
+                <field name="sku"/>
+                <field name="main_id"/>
+                <field name="barcode"/>
+                <field name="quantity"/>
+                <field name="alert"/>
+                <field name="note"/>
+                <field name="message"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form view for logs -->
+    <record id="view_warehouse_sync_log_form" model="ir.ui.view">
+        <field name="name">warehouse.sync.log.form</field>
+        <field name="model">warehouse.sync.log</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="create_date"/>
+                        <field name="user_id"/>
+                        <field name="status"/>
+                        <field name="sku"/>
+                        <field name="main_id"/>
+                        <field name="barcode"/>
+                        <field name="quantity"/>
+                        <field name="alert"/>
+                        <field name="note"/>
+                        <field name="message"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    
+    <!-- Search view for filtering and grouping logs -->
+    <record id="view_warehouse_sync_log_search" model="ir.ui.view">
+        <field name="name">warehouse.sync.log.search</field>
+        <field name="model">warehouse.sync.log</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="sku" string="SKU"/>
+                <field name="barcode" string="Barcode"/>
+            </search>
+        </field>
+    </record>
+
+    <menuitem id="menu_warehouse_root"
+    name="Warehouse Sync"
+    sequence="10"
+    web_icon="warehouse,static/description/icon.png" />
+</odoo>
